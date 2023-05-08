@@ -6,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
 
     public Transform fluidLevelObjectTransform;
-    public SpriteRenderer fluidLevelObjectSpriteRenderer;
+    
+    public FluidLevelHandler fluidLevelHandler;
     public ColorIncrementButton redColorButtonValues;
     public ColorIncrementButton greenColorButtonValues;
     public ColorIncrementButton blueColorButtonValues;
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetNewTargetRGB();
+        
     }
     void SetNewTargetRGB()
     {
@@ -52,18 +54,23 @@ public class GameManager : MonoBehaviour
 
     public void adjustFillRateForVariance(float currentIncrementRate)
     {
-        Color currentColor = fluidLevelObjectSpriteRenderer.color;
-        // Value between 0-1
+        Color currentColor = fluidLevelHandler.GetCurrentColor();
+
         float currentVariance = Mathf.Sqrt(Mathf.Pow(currentColor.r - targetRGBValue.r, 2) + Mathf.Pow(currentColor.g - targetRGBValue.g, 2) + Mathf.Pow(currentColor.b - targetRGBValue.b, 2));
         float clampedVariance = Mathf.Clamp(currentVariance, 0f, 1f);
-        Debug.Log("current variance:" + clampedVariance);
 
         float adjustedIncrementRate = (currentIncrementRate * clampedVariance) + minColorIncrementRate;
         float clampedAdustedIncrementRate = Mathf.Clamp(adjustedIncrementRate, minColorIncrementRate, maxColorIncrementRate);
 
-        Debug.Log("Adjusted FillRate:" + clampedAdustedIncrementRate);
         redColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
         greenColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
         blueColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
+    }
+
+    public void fillLineHit()
+    {
+        SetNewTargetRGB();
+        fluidLevelHandler.ResetFluidLevelPosition();
+        fluidLevelHandler.ResetFluidLevelColor();
     }
 }

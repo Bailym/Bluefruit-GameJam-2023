@@ -6,22 +6,21 @@ using UnityEngine.EventSystems;
 public class ColorIncrementButton : MonoBehaviour
 {
     public Transform fluidLevelObjectTransform;
-    public SpriteRenderer fluidSpriteRenderer;
+    public FluidLevelHandler fluidLevelHandler;
     public bool incrementsRed = false;
     public bool incrementsGreen = false;
     public bool incrementsBlue = false;
     public GameManager gameManager;
-    private bool isOpaque;
     private float sizeIncrementRateUnits = 0.02f;
     private float colorIncrementRate = 0.1f;
-    private float opacityIncreaseRate = 0.5f;
+    private float opacityIncrementRate = 0.5f;
     private float lastMouseDownTime = 0f;
     private float buttonDebouceDelay = 0.1f;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        isOpaque = false;
     }
 
     void OnMouseDrag()
@@ -44,14 +43,14 @@ public class ColorIncrementButton : MonoBehaviour
 
     void IncrementColors()
     {
-        if (!isOpaque) 
+        if (!fluidLevelHandler.GetIsOpaque()) 
         {
             IncreaseOpacity();
         }
 
         gameManager.adjustFillRateForVariance(colorIncrementRate);
 
-        Color newFluidColor = fluidSpriteRenderer.color;
+        Color newFluidColor = fluidLevelHandler.GetCurrentColor();
 
         float incrementRateNormalised = colorIncrementRate;
 
@@ -68,7 +67,7 @@ public class ColorIncrementButton : MonoBehaviour
             newFluidColor.b += incrementRateNormalised;
         }
 
-        fluidSpriteRenderer.color = newFluidColor;
+        fluidLevelHandler.SetCurrentColor(newFluidColor);
     }
 
 
@@ -88,15 +87,10 @@ public class ColorIncrementButton : MonoBehaviour
 
     void IncreaseOpacity()
     {
-        Color targetSpriteColorOpaque = fluidSpriteRenderer.color;
-        targetSpriteColorOpaque.a += opacityIncreaseRate;
+        Color newFluidColor = fluidLevelHandler.GetCurrentColor();
+        newFluidColor.a += opacityIncrementRate;
 
-        fluidSpriteRenderer.color = targetSpriteColorOpaque;
-
-        if (fluidSpriteRenderer.color.a >= 1f)
-        {
-            isOpaque = true;
-        }
+        fluidLevelHandler.SetCurrentColor(newFluidColor);
     }
 
     public float GetColorIncrementRate0To255()

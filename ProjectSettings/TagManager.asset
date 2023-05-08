@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - ColorButton
+  - MaxFillLine
+  - FluidLevel
   layers:
   - Default
   - TransparentFX
