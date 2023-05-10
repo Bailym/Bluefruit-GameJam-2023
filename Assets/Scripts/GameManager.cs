@@ -5,72 +5,93 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    public Transform fluidLevelObjectTransform;
-    
-    public FluidLevelHandler fluidLevelHandler;
-    public ColorIncrementButton redColorButtonValues;
-    public ColorIncrementButton greenColorButtonValues;
-    public ColorIncrementButton blueColorButtonValues;
-    public SpriteRenderer targetRGBDisplay;
-    private Color targetRGBValue;
-    private float minColorIncrementRate = 0.005f;
-    private float maxColorIncrementRate = 0.05f;
+  public Transform fluidLevelObjectTransform;
+
+  public FluidLevelHandler fluidLevelHandler;
+  public ColorIncrementButton redColorButtonValues;
+  public ColorIncrementButton greenColorButtonValues;
+  public ColorIncrementButton blueColorButtonValues;
+  public SpriteRenderer targetRGBDisplay;
+  private Color targetRGBValue;
+  private float minColorIncrementRate = 0.005f;
+  private float maxColorIncrementRate = 0.05f;
 
 
-    private void Start()
-    {
-        SetNewTargetRGB();
-        
-    }
-    void SetNewTargetRGB()
-    {
-        float randomRedValue = getNewRedTargetValue();
-        float randomGreenValue = getNewGreenTargetValue();
-        float randomBlueValue = getNewBlueTargetValue();
+  private void Start()
+  {
+    SetNewTargetRGB();
 
-        targetRGBValue.r = randomRedValue;
-        targetRGBValue.g = randomGreenValue;
-        targetRGBValue.b = randomBlueValue;
-        targetRGBValue.a = 1;
+  }
+  void SetNewTargetRGB()
+  {
+    float randomRedValue = getNewRedTargetValue();
+    float randomGreenValue = getNewGreenTargetValue();
+    float randomBlueValue = getNewBlueTargetValue();
 
-        targetRGBDisplay.color = targetRGBValue;
-    }
+    targetRGBValue.r = randomRedValue;
+    targetRGBValue.g = randomGreenValue;
+    targetRGBValue.b = randomBlueValue;
+    targetRGBValue.a = 1;
 
-    float getNewRedTargetValue()
-    {
-        float redMinValue = redColorButtonValues.GetColorIncrementRate0To255();
-        return Random.Range(redMinValue, 1);
-    }
-    float getNewGreenTargetValue()
-    {
-        float greenMinValue = greenColorButtonValues.GetColorIncrementRate0To255();
-        return Random.Range(greenMinValue, 1);
-    }
-    float getNewBlueTargetValue()
-    {
-        float blueMinValue = blueColorButtonValues.GetColorIncrementRate0To255();
-        return Random.Range(blueMinValue, 1);
-    }
+    targetRGBDisplay.color = targetRGBValue;
+  }
 
-    public void adjustFillRateForVariance(float currentIncrementRate)
-    {
-        Color currentColor = fluidLevelHandler.GetCurrentColor();
+  float getNewRedTargetValue()
+  {
+    float redMinValue = redColorButtonValues.GetColorIncrementRate0To255();
+    return Random.Range(redMinValue, 1);
+  }
+  float getNewGreenTargetValue()
+  {
+    float greenMinValue = greenColorButtonValues.GetColorIncrementRate0To255();
+    return Random.Range(greenMinValue, 1);
+  }
+  float getNewBlueTargetValue()
+  {
+    float blueMinValue = blueColorButtonValues.GetColorIncrementRate0To255();
+    return Random.Range(blueMinValue, 1);
+  }
 
-        float currentVariance = Mathf.Sqrt(Mathf.Pow(currentColor.r - targetRGBValue.r, 2) + Mathf.Pow(currentColor.g - targetRGBValue.g, 2) + Mathf.Pow(currentColor.b - targetRGBValue.b, 2));
-        float clampedVariance = Mathf.Clamp(currentVariance, 0f, 1f);
+  public void adjustFillRateForVariance(float currentIncrementRate)
+  {
+    float currentVariance = CalculateColorVariance();
+    float clampedVariance = Mathf.Clamp(currentVariance, 0f, 1f);
 
-        float adjustedIncrementRate = (currentIncrementRate * clampedVariance) + minColorIncrementRate;
-        float clampedAdustedIncrementRate = Mathf.Clamp(adjustedIncrementRate, minColorIncrementRate, maxColorIncrementRate);
+    float adjustedIncrementRate = (currentIncrementRate * clampedVariance) + minColorIncrementRate;
+    float clampedAdustedIncrementRate = Mathf.Clamp(adjustedIncrementRate, minColorIncrementRate, maxColorIncrementRate);
 
-        redColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
-        greenColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
-        blueColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
-    }
+    redColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
+    greenColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
+    blueColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
+  }
 
-    public void fillLineHit()
-    {
-        SetNewTargetRGB();
-        fluidLevelHandler.ResetFluidLevelPosition();
-        fluidLevelHandler.ResetFluidLevelColor();
-    }
+  public void fillLineHit()
+  {
+    float finalAccuracy = CalculateAccuracyPercentage();
+    Debug.Log("Accuracy:" + finalAccuracy);
+    SetNewTargetRGB();
+    fluidLevelHandler.ResetFluidLevelPosition();
+    fluidLevelHandler.ResetFluidLevelColor();
+  }
+
+  float CalculateColorVariance()
+  {
+    Color currentColor = fluidLevelHandler.GetCurrentColor();
+    float colorVariance = Mathf.Sqrt(Mathf.Pow(currentColor.r - targetRGBValue.r, 2) + Mathf.Pow(currentColor.g - targetRGBValue.g, 2) + Mathf.Pow(currentColor.b - targetRGBValue.b, 2));
+
+    return colorVariance;
+  }
+
+  float CalculateAccuracyPercentage()
+  {
+    Color currentColor = fluidLevelHandler.GetCurrentColor();
+    // The maximum variance is root 3 since the max value for each color channel is 1
+    float colorVariance = CalculateColorVariance();
+    Debug.Log("Target: Red:" + targetRGBValue.r + " Green: " + targetRGBValue.g + " Blue: " + targetRGBValue.b);
+    Debug.Log("Actual: Red:" + currentColor.r + " Green: " + currentColor.g + " Blue: " + currentColor.b);
+    Debug.Log(colorVariance);
+    float variancePercentage = (colorVariance / Mathf.Sqrt(3)) * 100;
+    float accuracyPercentage = 100f - variancePercentage;
+    return accuracyPercentage;
+  }
 }
