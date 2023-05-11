@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
   public ColorIncrementButton greenColorButtonValues;
   public ColorIncrementButton blueColorButtonValues;
   public SpriteRenderer targetRGBDisplay;
+  public UIManager uiManager;
   private Color targetRGBValue;
   private float minColorIncrementRate = 0.005f;
   private float maxColorIncrementRate = 0.05f;
@@ -20,7 +21,6 @@ public class GameManager : MonoBehaviour
   private void Start()
   {
     SetNewTargetRGB();
-
   }
   void SetNewTargetRGB()
   {
@@ -65,13 +65,14 @@ public class GameManager : MonoBehaviour
     blueColorButtonValues.SetColorIncrementRate(clampedAdustedIncrementRate);
   }
 
-  public void fillLineHit()
+  public void FillLineHit()
   {
     float finalAccuracy = CalculateAccuracyPercentage();
     Debug.Log("Accuracy:" + finalAccuracy);
     SetNewTargetRGB();
     fluidLevelHandler.ResetFluidLevelPosition();
     fluidLevelHandler.ResetFluidLevelColor();
+    uiManager.showAccuracyFeedback(finalAccuracy);
   }
 
   float CalculateColorVariance()
@@ -87,9 +88,6 @@ public class GameManager : MonoBehaviour
     Color currentColor = fluidLevelHandler.GetCurrentColor();
     // The maximum variance is root 3 since the max value for each color channel is 1
     float colorVariance = CalculateColorVariance();
-    Debug.Log("Target: Red:" + targetRGBValue.r + " Green: " + targetRGBValue.g + " Blue: " + targetRGBValue.b);
-    Debug.Log("Actual: Red:" + currentColor.r + " Green: " + currentColor.g + " Blue: " + currentColor.b);
-    Debug.Log(colorVariance);
     float variancePercentage = (colorVariance / Mathf.Sqrt(3)) * 100;
     float accuracyPercentage = 100f - variancePercentage;
     return accuracyPercentage;
