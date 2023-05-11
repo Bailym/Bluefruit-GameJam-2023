@@ -16,14 +16,28 @@ public class ColorIncrementButton : MonoBehaviour
   private float opacityIncrementRate = 0.5f;
   private float lastMouseDownTime = 0f;
   private float buttonDebouceDelay = 0.1f;
+  private Vector3 originalButtonScale;
+  private float buttonScaleIncreaseAmount = 0.5f;
+
+  private void Start()
+  {
+    originalButtonScale = gameObject.transform.localScale;
+  }
+
 
   void OnMouseDrag()
   {
     if (hasDebouceExpired())
     {
+      IncreaseButtonSize(buttonScaleIncreaseAmount);
       IncrementColors();
       IncrementHeight();
     }
+  }
+
+  void OnMouseUp()
+  {
+    ResetButtonSize();
   }
 
   bool hasDebouceExpired()
@@ -106,6 +120,24 @@ public class ColorIncrementButton : MonoBehaviour
   public void SetColorIncrementRate(float newRate)
   {
     colorIncrementRate = newRate;
+  }
+
+  void IncreaseButtonSize(float scaleAmount)
+  {
+    Vector3 newScale = originalButtonScale;
+    newScale.x += scaleAmount;
+    newScale.y += scaleAmount;
+
+    gameObject.transform.localScale = newScale;
+  }
+
+  void ResetButtonSize()
+  {
+    Vector3 newScale = gameObject.transform.localScale;
+    newScale.x = originalButtonScale.x;
+    newScale.y = originalButtonScale.y;
+
+    gameObject.transform.localScale = newScale;
   }
 
 
