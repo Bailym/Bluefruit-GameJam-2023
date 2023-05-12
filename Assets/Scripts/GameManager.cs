@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
   }
   void SetNewTargetRGB()
   {
+    uiManager.UpdateRequestText();
     float randomRedValue = getNewRedTargetValue();
     float randomGreenValue = getNewGreenTargetValue();
     float randomBlueValue = getNewBlueTargetValue();

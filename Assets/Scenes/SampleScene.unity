@@ -5833,6 +5833,7 @@ MonoBehaviour:
   FeedbackPanelImage: {fileID: 142676753}
   FeedBackSpritesGrades: {fileID: 142676757}
   FeedBackParticleSystem: {fileID: 142676755}
+  requestText: {fileID: 1535982086}
 --- !u!1 &826549910
 GameObject:
   m_ObjectHideFlags: 0
@@ -6398,7 +6399,7 @@ GameObject:
   - component: {fileID: 1535982087}
   - component: {fileID: 1535982086}
   m_Layer: 5
-  m_Name: SpeechText
+  m_Name: RequestText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6420,8 +6421,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -88.53, y: 0.000002861}
-  m_SizeDelta: {x: 622.89, y: 183.73}
+  m_AnchoredPosition: {x: -90, y: -0.000005722}
+  m_SizeDelta: {x: 622.89, y: 154.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1535982086
 MonoBehaviour:
@@ -6506,7 +6507,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0.7666552, z: -60.147644, w: -4.03249}
+  m_margin: {x: 20.498535, y: -0.43909457, z: -91.49826, w: -0.41513446}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
