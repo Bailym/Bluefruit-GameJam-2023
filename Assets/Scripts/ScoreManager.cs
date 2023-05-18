@@ -31,4 +31,10 @@ public class ScoreManager : MonoBehaviour
         int currentScoreInt = (int)currentScore;
         scoreText.text = "SCORE: " + currentScoreInt;
     }
+
+    public void AddEndGameScoreToPlayerPrefs()
+    {
+        int endGameScoreInt = (int)currentScore;
+        PlayerPrefs.SetInt("endGameScore", endGameScoreInt);
+    }
 }

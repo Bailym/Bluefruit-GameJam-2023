@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -108,7 +109,13 @@ public class GameManager : MonoBehaviour
 
         if (numberOfWarnings == endGameOnNumberOfWarnings)
         {
-            Debug.Log("GAME OVER");
+            GameOver();
         }
+    }
+
+    void GameOver()
+    {
+        scoreManager.AddEndGameScoreToPlayerPrefs();
+        SceneManager.LoadScene(sceneName: "Leaderboard");
     }
 }
