@@ -6,13 +6,13 @@ public class GameManager : MonoBehaviour
 {
 
   public Transform fluidLevelObjectTransform;
-
   public FluidLevelHandler fluidLevelHandler;
   public ColorIncrementButton redColorButtonValues;
   public ColorIncrementButton greenColorButtonValues;
   public ColorIncrementButton blueColorButtonValues;
   public SpriteRenderer targetRGBDisplay;
   public UIManager uiManager;
+  public ScoreManager scoreManager;
   private Color targetRGBValue;
   private float minColorIncrementRate = 0.005f;
   private float maxColorIncrementRate = 0.05f;
@@ -74,6 +74,8 @@ public class GameManager : MonoBehaviour
     fluidLevelHandler.ResetFluidLevelPosition();
     fluidLevelHandler.ResetFluidLevelColor();
     uiManager.showAccuracyFeedback(finalAccuracy);
+    float scoreFromAccuracy = scoreManager.GetScoreFromAccuracy(finalAccuracy);
+    scoreManager.AddToScore(scoreFromAccuracy);
   }
 
   float CalculateColorVariance()
@@ -86,7 +88,6 @@ public class GameManager : MonoBehaviour
 
   float CalculateAccuracyPercentage()
   {
-    Color currentColor = fluidLevelHandler.GetCurrentColor();
     // The maximum variance is root 3 since the max value for each color channel is 1
     float colorVariance = CalculateColorVariance();
     float variancePercentage = (colorVariance / Mathf.Sqrt(3)) * 100;
