@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI requestText;
     public List<SpriteRenderer> warningIcons;
     private List<string> requestTextOptions;
+    private float feedbackIconShowDurationSeconds = 0.5f;
 
     private void Start()
     {
@@ -64,7 +65,7 @@ public class UIManager : MonoBehaviour
     public void ShowFeedbackIcon()
     {
         FeedbackPanelImage.enabled = true;
-        Invoke("HideFeedbackIcon", 1f);
+        Invoke("HideFeedbackIcon", feedbackIconShowDurationSeconds);
     }
 
     void HideFeedbackIcon()
