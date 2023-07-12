@@ -13,6 +13,7 @@ public class FillLineHandler : MonoBehaviour
         if (collideWithTag.Equals("FluidLevel"))
         {
             gameManager.FillLineHit();
+            gameManager.soundManager.PlayDingSound();
         }
     }
 }

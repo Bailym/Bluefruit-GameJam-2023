@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer targetRGBDisplay;
     public UIManager uiManager;
     public ScoreManager scoreManager;
+    public SoundManager soundManager;
     private Color targetRGBValue;
     private float minColorIncrementRate = 0.005f;
     private float maxColorIncrementRate = 0.05f;

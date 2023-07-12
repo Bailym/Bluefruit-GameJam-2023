@@ -32,12 +32,8 @@ public class ColorIncrementButton : MonoBehaviour
       IncreaseButtonSize(buttonScaleIncreaseAmount);
       IncrementColors();
       IncrementHeight();
+      PlayPourSound();
     }
-  }
-
-  void OnMouseUp()
-  {
-    ResetButtonSize();
   }
 
   bool hasDebouceExpired()
@@ -48,6 +44,15 @@ public class ColorIncrementButton : MonoBehaviour
     }
     lastMouseDownTime = Time.time;
     return true;
+  }
+
+  void IncreaseButtonSize(float scaleAmount)
+  {
+    Vector3 newScale = originalButtonScale;
+    newScale.x += scaleAmount;
+    newScale.y += scaleAmount;
+
+    gameObject.transform.localScale = newScale;
   }
 
   void IncrementColors()
@@ -80,7 +85,15 @@ public class ColorIncrementButton : MonoBehaviour
     fluidLevelHandler.SetCurrentColor(newFluidColorClamped);
   }
 
-  Color ClampColorValues0to1(Color colorToClamp)
+   void IncreaseOpacity()
+  {
+    Color newFluidColor = fluidLevelHandler.GetCurrentColor();
+    newFluidColor.a += opacityIncrementRate;
+
+    fluidLevelHandler.SetCurrentColor(newFluidColor);
+  }
+
+    Color ClampColorValues0to1(Color colorToClamp)
   {
     Color clampedColor = colorToClamp;
     clampedColor.r = Mathf.Clamp(colorToClamp.r, 0f, 1f);
@@ -90,9 +103,9 @@ public class ColorIncrementButton : MonoBehaviour
 
     return clampedColor;
   }
+
   void IncrementHeight()
   {
-
     // Get the current scale of the sprite
     Vector3 currentScale = fluidLevelObjectTransform.localScale;
     currentScale.y += sizeIncrementRateUnits;
@@ -104,12 +117,16 @@ public class ColorIncrementButton : MonoBehaviour
     fluidLevelObjectTransform.localScale = currentScale;
   }
 
-  void IncreaseOpacity()
+  void PlayPourSound()
   {
-    Color newFluidColor = fluidLevelHandler.GetCurrentColor();
-    newFluidColor.a += opacityIncrementRate;
+    gameManager.soundManager.PlayPourSound();
+  }
 
-    fluidLevelHandler.SetCurrentColor(newFluidColor);
+  void OnMouseUp()
+  {
+    ResetButtonSize();
+    gameManager.soundManager.StopPourSound();
+    gameManager.soundManager.ResetPourSoundTimer();
   }
 
   public float GetColorIncrementRate0To255()
@@ -120,15 +137,6 @@ public class ColorIncrementButton : MonoBehaviour
   public void SetColorIncrementRate(float newRate)
   {
     colorIncrementRate = newRate;
-  }
-
-  void IncreaseButtonSize(float scaleAmount)
-  {
-    Vector3 newScale = originalButtonScale;
-    newScale.x += scaleAmount;
-    newScale.y += scaleAmount;
-
-    gameObject.transform.localScale = newScale;
   }
 
   void ResetButtonSize()
