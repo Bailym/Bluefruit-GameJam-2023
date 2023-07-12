@@ -23,4 +23,9 @@ public class LeaderboardManager : MonoBehaviour
         endGameScoreText.text = "FINAL SCORE:" + endGameScore;
     }
 
+    public void RestartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
+    }
+
 }
